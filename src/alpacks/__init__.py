@@ -206,9 +206,7 @@ class DirectoryPackWriterAsync(PackWriterAsync[None]):
 
         # If the output dir exists and is non-empty (or is not a
         # directory), raise an error.
-        if os.path.exists(output_dir) and (
-            not os.path.isdir(output_dir) or os.listdir(output_dir)
-        ):
+        if os.path.exists(output_dir) and (not os.path.isdir(output_dir) or os.listdir(output_dir)):
             msg = f"Output directory '{output_dir}' exists and is not empty."
             raise ValueError(msg)
 
@@ -269,9 +267,7 @@ class DirectoryPackWriterAsync(PackWriterAsync[None]):
             """
         ).lstrip()
 
-        await self._write_to_path(
-            os.path.join(FOLDER_INFO_DIR, PROPERTIES_FILE), text.encode("utf-8")
-        )
+        await self._write_to_path(os.path.join(FOLDER_INFO_DIR, PROPERTIES_FILE), text.encode("utf-8"))
 
     # Write pack metadata, e.g. tags.
     async def _write_xmp_file(self) -> None:
@@ -282,9 +278,7 @@ class DirectoryPackWriterAsync(PackWriterAsync[None]):
                 if len(tag_values) == 0:
                     msg = f"Tag `{tag_name}` is empty for path `{path}`"
                     raise ValueError(msg)
-                rdf_items.append(
-                    "|".join(escape(val) for val in [tag_name, *tag_values])
-                )
+                rdf_items.append("|".join(escape(val) for val in [tag_name, *tag_values]))
 
             rdf_indent = "               "
             tags_text += textwrap.indent(
@@ -296,9 +290,7 @@ class DirectoryPackWriterAsync(PackWriterAsync[None]):
                           <rdf:Bag>
                     """
                 ).lstrip("\n")
-                + "\n".join(
-                    [f"         <rdf:li>{rdf_item}</rdf:li>" for rdf_item in rdf_items]
-                )
+                + "\n".join([f"         <rdf:li>{rdf_item}</rdf:li>" for rdf_item in rdf_items])
                 + textwrap.dedent(
                     """
                           </rdf:Bag>
@@ -335,9 +327,7 @@ class DirectoryPackWriterAsync(PackWriterAsync[None]):
             </x:xmpmeta>
             """
         ).lstrip()
-        await self._write_to_path(
-            os.path.join(FOLDER_INFO_DIR, XMP_FILE), xmp_text.encode("utf-8")
-        )
+        await self._write_to_path(os.path.join(FOLDER_INFO_DIR, XMP_FILE), xmp_text.encode("utf-8"))
 
     def _preview_path(self, path: str) -> str:
         return os.path.join(FOLDER_INFO_DIR, "Previews", f"{path}.ogg")
