@@ -68,6 +68,9 @@ class PackWriterAsync(Generic[_Context]):
         self._is_hidden_in_browse_groups = k.get("is_hidden_in_browse_groups", False)
 
         self.__context: _Context | None = None
+        # The `open()` method might return None, so we need a separate
+        # tracker to check the open status.
+        self.__has_context: bool = False
 
         # Propagate unexpected keys up to `object`, so that errors
         # will be thrown if appropriate.
@@ -114,20 +117,21 @@ class PackWriterAsync(Generic[_Context]):
     # Which is equivalent to:
     #
     #   p = PackWriter(**args)
-    #   context = p._open()
+    #   context = p.open()
     #   try:
     #      p.set_file(...)
     #      p.set_preview(...)
-    #      p._commit()
+    #      p.commit()
     #   finally:
-    #      p._close(context)
+    #      p.close(context)
     #
     async def __aenter__(self) -> Self:
-        if self.__context is not None:
+        if self.__has_context:
             msg = f"{self} is already open"
             raise ValueError(msg)
 
         self.__context = await self.open()
+        self.__has_context = True
         return self
 
     async def __aexit__(
@@ -136,7 +140,7 @@ class PackWriterAsync(Generic[_Context]):
         exc_inst: BaseException | None,
         exc_tb: TracebackType | None,
     ) -> None:
-        if self.__context is None:
+        if not self.__has_context:
             msg = f"{self} is not open"
             raise ValueError(msg)
 
@@ -144,7 +148,12 @@ class PackWriterAsync(Generic[_Context]):
             if exc_type is None:
                 await self.commit()
         finally:
-            await self.close(self.__context)
+            await self.close(
+                # The context type is allowed to be `None`, so we
+                # can't just assert that this is present.
+                self.__context,  # type: ignore
+            )
+            self.__has_context = False
 
 
 # For synchronous writes, just wrap an async writer.
@@ -177,7 +186,7 @@ class PackWriter(Generic[_Context]):
         asyncio.run(self._pack_writer_async.close(context))
 
     def __enter__(self) -> Self:
-        self._context = self.open()
+        asyncio.run(self._pack_writer_async.__aenter__())
         return self
 
     def __exit__(
@@ -186,11 +195,7 @@ class PackWriter(Generic[_Context]):
         exc_val: BaseException | None,
         exc_tb: TracebackType | None,
     ) -> None:
-        try:
-            if exc_type is None:
-                self.commit()
-        finally:
-            self.close(self._context)
+        asyncio.run(self._pack_writer_async.__aexit__(exc_type, exc_val, exc_tb))
 
 
 class DirectoryPackWriterAsync(PackWriterAsync[None]):
@@ -201,7 +206,9 @@ class DirectoryPackWriterAsync(PackWriterAsync[None]):
 
         # If the output dir exists and is non-empty (or is not a
         # directory), raise an error.
-        if os.path.exists(output_dir) and (not os.path.isdir(output_dir) or os.listdir(output_dir)):
+        if os.path.exists(output_dir) and (
+            not os.path.isdir(output_dir) or os.listdir(output_dir)
+        ):
             msg = f"Output directory '{output_dir}' exists and is not empty."
             raise ValueError(msg)
 
@@ -262,7 +269,9 @@ class DirectoryPackWriterAsync(PackWriterAsync[None]):
             """
         ).lstrip()
 
-        await self._write_to_path(os.path.join(FOLDER_INFO_DIR, PROPERTIES_FILE), text.encode("utf-8"))
+        await self._write_to_path(
+            os.path.join(FOLDER_INFO_DIR, PROPERTIES_FILE), text.encode("utf-8")
+        )
 
     # Write pack metadata, e.g. tags.
     async def _write_xmp_file(self) -> None:
@@ -273,7 +282,9 @@ class DirectoryPackWriterAsync(PackWriterAsync[None]):
                 if len(tag_values) == 0:
                     msg = f"Tag `{tag_name}` is empty for path `{path}`"
                     raise ValueError(msg)
-                rdf_items.append("|".join(escape(val) for val in [tag_name, *tag_values]))
+                rdf_items.append(
+                    "|".join(escape(val) for val in [tag_name, *tag_values])
+                )
 
             rdf_indent = "               "
             tags_text += textwrap.indent(
@@ -285,7 +296,9 @@ class DirectoryPackWriterAsync(PackWriterAsync[None]):
                           <rdf:Bag>
                     """
                 ).lstrip("\n")
-                + "\n".join([f"         <rdf:li>{rdf_item}</rdf:li>" for rdf_item in rdf_items])
+                + "\n".join(
+                    [f"         <rdf:li>{rdf_item}</rdf:li>" for rdf_item in rdf_items]
+                )
                 + textwrap.dedent(
                     """
                           </rdf:Bag>
@@ -322,7 +335,9 @@ class DirectoryPackWriterAsync(PackWriterAsync[None]):
             </x:xmpmeta>
             """
         ).lstrip()
-        await self._write_to_path(os.path.join(FOLDER_INFO_DIR, XMP_FILE), xmp_text.encode("utf-8"))
+        await self._write_to_path(
+            os.path.join(FOLDER_INFO_DIR, XMP_FILE), xmp_text.encode("utf-8")
+        )
 
     def _preview_path(self, path: str) -> str:
         return os.path.join(FOLDER_INFO_DIR, "Previews", f"{path}.ogg")
