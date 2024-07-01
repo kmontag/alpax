@@ -1,11 +1,11 @@
-# alpacka
+# alpack
 
--[![PyPI - Version](https://img.shields.io/pypi/v/alpacka.svg)](https://pypi.org/project/alpacka)
+[![PyPI - Version](https://img.shields.io/pypi/v/alpack.svg)](https://pypi.org/project/alpack)
 
 ---
 
-`alpacka` allows you to generate custom Ableton Live packs. It
-supports adding audio previews and Live 12 tags to the pack content.
+`alpack` allows you to generate custom Ableton Live packs. It supports
+adding audio previews and Live 12 tags to the pack content.
 
 Currently, only directory-based packs can be created - **generating
 `.alp` files is not supported.**
@@ -13,20 +13,20 @@ Currently, only directory-based packs can be created - **generating
 Packs can be added to Live by dragging them into the Places pane.
 
 _This is alpha software. It works for my use cases but hasn't been
-extensively tested, and is missing plenty of functionality. APIS are
-subject to change significantly. Please submit issues and/or PRs if
+extensively tested, and is missing plenty of functionality. APIs are
+subject to change. Please submit issues and/or PRs if
 you run into trouble._
 
 ## Installation
 
 ```console
-pip install alpacka
+pip install alpack
 ```
 
 ## Usage
 
 ```python
-from alpacka import DirectoryPackWriter
+from alpack import DirectoryPackWriter
 from time import time
 
 with DirectoryPackWriter(
@@ -49,7 +49,7 @@ An async variant is also available:
 
 ```python
 import asyncio
-from alpacka import DirectoryPackWriterAsync
+from alpack import DirectoryPackWriterAsync
 from time import time
 
 async def run():
