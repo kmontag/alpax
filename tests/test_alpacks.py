@@ -1,7 +1,7 @@
 import os
 import tempfile
 
-from alpack import DirectoryPackWriter
+from alpacks import DirectoryPackWriter
 
 
 def test_simple_directory() -> None:
