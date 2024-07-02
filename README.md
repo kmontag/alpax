@@ -1,6 +1,7 @@
 # alpacks
 
 [![PyPI - Version](https://img.shields.io/pypi/v/alpacks.svg)](https://pypi.org/project/alpacks)
+![Test & Publish](https://github.com/kmontag/alpacks/actions/workflows/test_and_publish.yml/badge.svg?branch=main)
 
 ---
 

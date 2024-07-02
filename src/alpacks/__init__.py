@@ -8,19 +8,28 @@ from typing import (
     TYPE_CHECKING,
     Collection,
     Generic,
-    NotRequired,
-    Self,
     Sequence,
-    TypeAlias,
     TypedDict,
     TypeVar,
-    Unpack,
-    override,
 )
 from xml.sax.saxutils import escape
 
 if TYPE_CHECKING:
     from types import TracebackType
+
+    from typing_extensions import (
+        NotRequired,
+        Self,
+        TypeAlias,
+        Unpack,
+        override,
+    )
+else:
+    # Replace the override decorator with a no-op outside of the
+    # type-checking environment, so we don't need to depend on
+    # `typing_extensions` at runtime.
+    def override(func):
+        return func
 
 
 FOLDER_INFO_DIR = "Ableton Folder Info"

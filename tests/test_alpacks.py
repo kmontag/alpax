@@ -35,7 +35,6 @@ def test_directory() -> None:
             for field, value in zip(
                 ("PackMajorVersion", "PackMinorVersion", "PackRevision"),
                 version.split("."),
-                strict=True,
             ):
                 assert f"Int {field} = {value};" in properties_text
 
