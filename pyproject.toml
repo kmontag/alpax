@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "alpacks"
+name = "alpax"
 dynamic = ["version"]
 description = 'Generate custom Ableton Live packs'
 readme = "README.md"
@@ -26,12 +26,12 @@ classifiers = [
 dependencies = []
 
 [project.urls]
-Documentation = "https://github.com/kmontag/alpacks#readme"
-Issues = "https://github.com/kmontag/alpacks/issues"
-Source = "https://github.com/kmontag/alpacks"
+Documentation = "https://github.com/kmontag/alpax#readme"
+Issues = "https://github.com/kmontag/alpax/issues"
+Source = "https://github.com/kmontag/alpax"
 
 [tool.hatch.version]
-path = "src/alpacks/__about__.py"
+path = "src/alpax/__about__.py"
 
 # [tool.hatch.envs.hatch-test]
 # extra-dependencies = [
@@ -43,19 +43,19 @@ extra-dependencies = [
   "mypy>=1.0.0",
 ]
 [tool.hatch.envs.types.scripts]
-check = "mypy --install-types --non-interactive {args:src/alpacks tests}"
+check = "mypy --install-types --non-interactive {args:src/alpax tests}"
 
 [tool.coverage.run]
-source_pkgs = ["alpacks", "tests"]
+source_pkgs = ["alpax", "tests"]
 branch = true
 parallel = true
 omit = [
-  "src/alpacks/__about__.py",
+  "src/alpax/__about__.py",
 ]
 
 [tool.coverage.paths]
-alpacks = ["src/alpacks", "*/alpacks/src/alpacks"]
-tests = ["tests", "*/alpacks/tests"]
+alpax = ["src/alpax", "*/alpax/src/alpax"]
+tests = ["tests", "*/alpax/tests"]
 
 [tool.coverage.report]
 exclude_lines = [
@@ -92,7 +92,7 @@ major_on_zero = true
 allow_zero_version = true
 no_git_verify = false
 tag_format = "v{version}"
-version_variables = ["src/alpacks/__about__.py:__version__"]
+version_variables = ["src/alpax/__about__.py:__version__"]
 
 [tool.semantic_release.branches.main]
 match = "main"

@@ -2,7 +2,7 @@ import asyncio
 import os
 import tempfile
 
-import alpacks
+import alpax
 
 
 def test_directory() -> None:
@@ -11,7 +11,7 @@ def test_directory() -> None:
     with tempfile.TemporaryDirectory() as output_dir:
         path = "test.txt"
         version = "2.3.4"
-        with alpacks.DirectoryPackWriter(
+        with alpax.DirectoryPackWriter(
             output_dir,
             name=name,
             unique_id=unique_id,
@@ -55,7 +55,7 @@ def test_simple_directory_async() -> None:
     with tempfile.TemporaryDirectory() as output_dir:
 
         async def run() -> None:
-            async with alpacks.DirectoryPackWriterAsync(output_dir, name="Test", unique_id="test.id") as pack_writer:
+            async with alpax.DirectoryPackWriterAsync(output_dir, name="Test", unique_id="test.id") as pack_writer:
                 # Simple test, just make sure the write can happen
                 # without errors.
                 await pack_writer.set_file_content("path.adg", b"content")

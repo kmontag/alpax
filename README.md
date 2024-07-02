@@ -1,11 +1,11 @@
-# alpacks
+# alpax
 
-[![PyPI - Version](https://img.shields.io/pypi/v/alpacks.svg)](https://pypi.org/project/alpacks)
-![Test & Release](https://github.com/kmontag/alpacks/actions/workflows/test_and_release.yml/badge.svg?branch=main)
+[![PyPI - Version](https://img.shields.io/pypi/v/alpax.svg)](https://pypi.org/project/alpax)
+![Test & Release](https://github.com/kmontag/alpax/actions/workflows/test_and_release.yml/badge.svg?branch=main)
 
 ---
 
-`alpacks` allows you to generate custom Ableton Live packs. It supports
+`alpax` allows you to generate custom Ableton Live packs. It supports
 adding audio previews and Live 12 tags to the pack content.
 
 Currently, only directory-based packs can be created - **generating
@@ -21,13 +21,13 @@ you run into trouble._
 ## Installation
 
 ```console
-pip install alpacks
+pip install alpax
 ```
 
 ## Usage
 
 ```python
-from alpacks import DirectoryPackWriter
+from alpax import DirectoryPackWriter
 from time import time
 
 with DirectoryPackWriter(
@@ -50,7 +50,7 @@ An async variant is also available:
 
 ```python
 import asyncio
-from alpacks import DirectoryPackWriterAsync
+from alpax import DirectoryPackWriterAsync
 from time import time
 
 async def run():
