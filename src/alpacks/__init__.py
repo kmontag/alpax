@@ -8,19 +8,29 @@ from typing import (
     TYPE_CHECKING,
     Collection,
     Generic,
-    NotRequired,
-    Self,
     Sequence,
-    TypeAlias,
+    Tuple,
     TypedDict,
     TypeVar,
-    Unpack,
-    override,
 )
 from xml.sax.saxutils import escape
 
 if TYPE_CHECKING:
     from types import TracebackType
+
+    from typing_extensions import (
+        NotRequired,
+        Self,
+        TypeAlias,
+        Unpack,
+        override,
+    )
+else:
+    # Replace the override decorator with a no-op outside of the
+    # type-checking environment, so we don't need to depend on
+    # `typing_extensions` at runtime.
+    def override(func):
+        return func
 
 
 FOLDER_INFO_DIR = "Ableton Folder Info"
@@ -35,7 +45,7 @@ XMP_FILE = "c55d131f-2661-5add-aece-29afb7099dfa.xmp"
 
 # First element is the tag name (e.g. "Character", "Devices"), second
 # element is the tag and subtag values.
-Tag: TypeAlias = tuple[str, Sequence[str]]
+Tag: TypeAlias = Tuple[str, Sequence[str]]
 
 _Context = TypeVar("_Context")
 
