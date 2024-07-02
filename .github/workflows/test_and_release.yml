@@ -34,7 +34,7 @@ jobs:
     concurrency: release
     environment:
       name: release
-      url: https://pypi.org/p/alpacks
+      url: https://pypi.org/p/alpax
 
     if: github.event_name == 'push'
 
