@@ -31,6 +31,7 @@ jobs:
   release:
     name: "publish to GitHub and PyPi"
     runs-on: ubuntu-latest
+    concurrency: release
     environment:
       name: release
       url: https://pypi.org/p/alpacks
@@ -56,6 +57,7 @@ jobs:
       # Publishing steps adapted from
       # https://python-semantic-release.readthedocs.io/en/latest/migrating_from_v7.html#removal-of-pypi-token-repository-username-and-repository-password-inputs.
       - name: Update package version if needed
+        id: release
         uses: python-semantic-release/python-semantic-release@v9.8.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -66,9 +68,3 @@ jobs:
       - name: Publish to PyPi
         uses: pypa/gh-action-pypi-publish@release/v1
         if: steps.release.outputs.released == 'true'
-
-      - name: Upload to GitHub releases
-        uses: python-semantic-release/upload-to-gh-release@v8.7.0
-        if: steps.release.outputs.released == 'true'
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
