@@ -4,7 +4,9 @@
 
 ### Build
 
-* build: install hatch during semantic release execution ([`c551a23`](https://github.com/kmontag/alpacks/commit/c551a2386661f181e3c819d813c4dedf8b2e8200))
+* build: fix detection of semantic release output ([`6b78cfd`](https://github.com/kmontag/alpacks/commit/6b78cfdf7fc482f246c34352b9c972f104dd2d56))
+
+* build: install hatch during semantic release execution ([`e3ee436`](https://github.com/kmontag/alpacks/commit/e3ee4363122fbec47283bf8812742ffa32a3bdd0))
 
 * build: update semantic release build command ([`bbc20df`](https://github.com/kmontag/alpacks/commit/bbc20df150279d3055651952c7692344e16870e5))
 
@@ -15,6 +17,10 @@
 * chore: fixes in semantic release workflow ([`a145bbe`](https://github.com/kmontag/alpacks/commit/a145bbe583c4fa0dd252561b8c635e0a23edf2c5))
 
 * chore: update fetch depth in semantic release action ([`dfdd7f6`](https://github.com/kmontag/alpacks/commit/dfdd7f69d4d10762b469182a7ed3f0b363a37fb2))
+
+### Documentation
+
+* docs: fix github actions badge ([`c6fb7bf`](https://github.com/kmontag/alpacks/commit/c6fb7bf525ce1bce72a21f56c794edfc7359fe87))
 
 ### Refactor
 
