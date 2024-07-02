@@ -1,6 +1,7 @@
 # alpax
 
 [![PyPI - Version](https://img.shields.io/pypi/v/alpax.svg)](https://pypi.org/project/alpax)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/alpax.svg)](https://pypi.org/project/alpax)
 ![Test & Release](https://github.com/kmontag/alpax/actions/workflows/test_and_release.yml/badge.svg?branch=main)
 
 ---
