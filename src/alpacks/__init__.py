@@ -9,7 +9,6 @@ from typing import (
     Collection,
     Generic,
     Sequence,
-    Tuple,
     TypedDict,
     TypeVar,
 )
@@ -45,7 +44,7 @@ XMP_FILE = "c55d131f-2661-5add-aece-29afb7099dfa.xmp"
 
 # First element is the tag name (e.g. "Character", "Devices"), second
 # element is the tag and subtag values.
-Tag: TypeAlias = Tuple[str, Sequence[str]]
+Tag: TypeAlias = tuple[str, Sequence[str]]
 
 _Context = TypeVar("_Context")
 
