@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## v0.0.4 (2024-07-07)
+
+### Ci
+
+* ci: replace old project name in github workflow ([`944a781`](https://github.com/kmontag/alpax/commit/944a781e0a9c417d43c09e1176eff05058b6f1b4))
+
+### Documentation
+
+* docs: add python version badge ([`6fd6127`](https://github.com/kmontag/alpax/commit/6fd6127da792dc686ed76d2c9001a54005bceb8d))
+
+### Fix
+
+* fix: add py.typed marker file ([`46ced41`](https://github.com/kmontag/alpax/commit/46ced41f3225a4de14ddd5414e5bbc008930df84))
+
 ## v0.0.3 (2024-07-02)
 
 ### Refactor
