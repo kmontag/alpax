@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## v0.1.0 (2024-07-22)
+
+### Chore
+
+* chore: add explicit ruff settings to correspond to hatch defaults ([`39662cf`](https://github.com/kmontag/alpax/commit/39662cfce9c617c4de48d08ec8ba258988735329))
+
+### Feature
+
+* feat: accept PathLike argument for directory path output location ([`90b9d02`](https://github.com/kmontag/alpax/commit/90b9d02561d1ce8439602f6caea0052370caa981))
+
 ## v0.0.4 (2024-07-07)
 
 ### Ci
