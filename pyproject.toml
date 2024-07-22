@@ -67,6 +67,17 @@ exclude_lines = [
 [tool.mypy]
 disallow_untyped_defs = true
 
+[tool.ruff]
+# Explicitly declare default hatch settings, see
+# https://hatch.pypa.io/1.9/config/static-analysis/#default-settings.
+line-length = 120
+builtins = ["alpax"]
+
+[tool.ruff.format]
+# More explicit default hatch settings.
+docstring-code-format = true
+docstring-code-line-length = 80
+
 [tool.ruff.lint]
 # - ARG: unused arguments
 # - B: flake8-bugbear
