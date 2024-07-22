@@ -208,7 +208,7 @@ class PackWriter(Generic[_Context]):
 
 
 class DirectoryPackWriterAsync(PackWriterAsync[None]):
-    def __init__(self, output_dir: str, **k: Unpack[PackProperties]):
+    def __init__(self, output_dir: str | os.PathLike, **k: Unpack[PackProperties]):
         super().__init__(**k)
 
         self._output_dir = output_dir
@@ -359,6 +359,6 @@ class DirectoryPackWriterAsync(PackWriterAsync[None]):
 
 
 class DirectoryPackWriter(PackWriter):
-    def __init__(self, output_dir: str, **k: Unpack[PackProperties]):
+    def __init__(self, output_dir: str | os.PathLike, **k: Unpack[PackProperties]):
         pack_writer_async = DirectoryPackWriterAsync(output_dir, **k)
         super().__init__(pack_writer_async)
