@@ -7,7 +7,7 @@ name = "alpax"
 dynamic = ["version"]
 description = 'Generate custom Ableton Live packs'
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 license = "MIT"
 keywords = []
 authors = [
