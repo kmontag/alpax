@@ -38,6 +38,16 @@ path = "src/alpax/__about__.py"
 #   "pytest-asyncio~=0.23.7",
 # ]
 
+[tool.hatch.envs.coverage]
+detached = true
+dependencies = [
+  "coverage~=7.6.0",
+]
+
+[tool.hatch.envs.coverage.scripts]
+combine = "coverage combine {args}"
+report-xml = "coverage xml"
+
 [tool.hatch.envs.types]
 extra-dependencies = [
   "mypy>=1.0.0",

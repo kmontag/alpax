@@ -11,7 +11,7 @@ on:
 
 jobs:
   validate:
-    name: "tests & coverage"
+    name: lint and test
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -28,15 +28,41 @@ jobs:
       - run: hatch test --cover
       - run: hatch run types:check
 
+      # Adapted from
+      # https://github.com/pypa/hatch/blob/master/.github/workflows/test.yml
+      - run: mv .coverage ".coverage.${{ matrix.os }}.${{ matrix.python-version }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ matrix.os }}-${{ matrix.python-version }}
+          path: .coverage*
+
+  coverage:
+    name: report coverage
+    runs-on: ubuntu-latest
+    # Make sure coverage reports have been generated.
+    needs:
+      - validate
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+      - run: python -m pip install hatch
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: coverage-*
+          merge-multiple: true
+
+      - run: hatch run coverage:combine
+      - run: hatch run coverage:report-xml
       - uses: codecov/codecov-action@v4
-        # We don't need to upload coverage more than once.
-        if: matrix.python-version == '3.12'
         with:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
 
   release:
-    name: "publish to GitHub and PyPi"
+    name: publish to GitHub and PyPi
     runs-on: ubuntu-latest
     concurrency: release
     environment:
