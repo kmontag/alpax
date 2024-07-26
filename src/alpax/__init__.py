@@ -4,11 +4,10 @@ import asyncio
 import json
 import os
 import textwrap
+from collections.abc import Collection, Sequence
 from typing import (
     TYPE_CHECKING,
-    Collection,
     Generic,
-    Sequence,
     TypedDict,
     TypeVar,
 )
