@@ -3,6 +3,7 @@
 [![PyPI - Version](https://img.shields.io/pypi/v/alpax.svg)](https://pypi.org/project/alpax)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/alpax.svg)](https://pypi.org/project/alpax)
 ![Test & Release](https://github.com/kmontag/alpax/actions/workflows/test_and_release.yml/badge.svg?branch=main)
+[![codecov](https://codecov.io/github/kmontag/alpax/graph/badge.svg?token=5C1JO6YTDL)](https://codecov.io/github/kmontag/alpax)
 
 ---
 
