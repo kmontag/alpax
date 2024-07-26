@@ -1,5 +1,33 @@
 # CHANGELOG
 
+## v0.1.1 (2024-07-26)
+
+### Chore
+
+* chore: add generated coverage database to gitignore ([`aa9d824`](https://github.com/kmontag/alpax/commit/aa9d824511d5903a7b36385b086cc255077e70fb))
+
+* chore: fix formatting ([`4ecdfc5`](https://github.com/kmontag/alpax/commit/4ecdfc536d2165cb48e444b7a8ce809b807836ee))
+
+### Ci
+
+* ci: fix coverage artifact names ([`beffde1`](https://github.com/kmontag/alpax/commit/beffde155a816d928a46d4a1105217a7df5fcaa1))
+
+* ci: combine multiple coverage reports ([`ec4e89b`](https://github.com/kmontag/alpax/commit/ec4e89b6bf322dc0798e5e51b2681a4408530f0e))
+
+* ci: update codecov action version ([`4c589f0`](https://github.com/kmontag/alpax/commit/4c589f0983f5bb0fd8de4058d5547004897408f7))
+
+* ci: fail build if codecov fails ([`dbfba64`](https://github.com/kmontag/alpax/commit/dbfba648b8a00075cc559642f72ce5f1bbe9c710))
+
+* ci: upload code coverage in builds ([`bf1edaf`](https://github.com/kmontag/alpax/commit/bf1edaf66cfd090d4f9f8fe131d935b08b299e6a))
+
+### Documentation
+
+* docs: add codecov badge ([`1f5dcc5`](https://github.com/kmontag/alpax/commit/1f5dcc5b7bc64a7d5304dd782d67ea0ec224bfb5))
+
+### Fix
+
+* fix: increase minimum python version to 3.9 ([`6b5d63c`](https://github.com/kmontag/alpax/commit/6b5d63c48f17c0514b45665144cb574d7c7cbaac))
+
 ## v0.1.0 (2024-07-22)
 
 ### Chore
