@@ -31,6 +31,8 @@ jobs:
       - uses: codecov/codecov-action@v1
         # We don't need to upload coverage more than once.
         if: matrix.python-version == '3.12'
+        with:
+          fail_ci_if_error: true
 
   release:
     name: "publish to GitHub and PyPi"
