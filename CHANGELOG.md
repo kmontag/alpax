@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## v0.2.0 (2024-07-27)
+
+### Chore
+
+* chore: add package to isort known first party packages ([`c0d991b`](https://github.com/kmontag/alpax/commit/c0d991b3880903c2984556228bde5b2e2ae516c9))
+
+### Feature
+
+* feat: add output_dir property to directory pack writers ([`afac7e0`](https://github.com/kmontag/alpax/commit/afac7e0e8fb276a92354ca69b4c9ad8d2a8e077c))
+
+### Refactor
+
+* refactor: don&#39;t require a specific context type for pack writers ([`2e3a879`](https://github.com/kmontag/alpax/commit/2e3a879a564239c25613608a8f4669d1ca352935))
+
 ## v0.1.1 (2024-07-26)
 
 ### Chore
