@@ -5,6 +5,7 @@ import json
 import os
 import textwrap
 from collections.abc import Collection, Sequence
+from contextlib import AsyncExitStack
 from typing import (
     TYPE_CHECKING,
     Generic,
@@ -45,7 +46,7 @@ XMP_FILE = "c55d131f-2661-5add-aece-29afb7099dfa.xmp"
 # element is the tag and subtag values.
 Tag: TypeAlias = tuple[str, Sequence[str]]
 
-_Context = TypeVar("_Context")
+_PackWriterAsyncType = TypeVar("_PackWriterAsyncType", bound="PackWriterAsync")
 
 
 class PackProperties(TypedDict):
@@ -60,7 +61,7 @@ class PackProperties(TypedDict):
     is_hidden_in_browse_groups: NotRequired[bool]
 
 
-class PackWriterAsync(Generic[_Context]):
+class PackWriterAsync:
     def __init__(self, **k: Unpack[PackProperties]):
         self._name: str = k["name"]
         self._unique_id: str = k["unique_id"]
@@ -75,10 +76,7 @@ class PackWriterAsync(Generic[_Context]):
 
         self._is_hidden_in_browse_groups = k.get("is_hidden_in_browse_groups", False)
 
-        self.__context: _Context | None = None
-        # The `open()` method might return None, so we need a separate
-        # tracker to check the open status.
-        self.__has_context: bool = False
+        self.__exit_stack: AsyncExitStack | None = None
 
         # Propagate unexpected keys up to `object`, so that errors
         # will be thrown if appropriate.
@@ -108,38 +106,47 @@ class PackWriterAsync(Generic[_Context]):
         raise NotImplementedError
 
     # Open any resources necessary to start adding content, e.g. a
-    # temp directory to stage files.
-    async def open(self) -> _Context:
+    # temp directory to stage files. If any resources need to be
+    # cleaned up after all content has been added/committed, add them
+    # to the exit stack.
+    async def _create_context(self, exit_stack: AsyncExitStack) -> None:
         raise NotImplementedError
 
-    # Close any resources opened by `_open`.
-    async def close(self, context: _Context) -> None:
-        raise NotImplementedError
+    async def open(self) -> None:
+        if self.__exit_stack is not None:
+            msg = f"{self} is already open"
+            raise RuntimeError(msg)
+
+        self.__exit_stack = AsyncExitStack()
+        await self._create_context(self.__exit_stack)
+
+    async def close(self) -> None:
+        exit_stack = self.__exit_stack
+        if exit_stack is None:
+            msg = f"{self} is not open"
+            raise RuntimeError(msg)
+        self.__exit_stack = None
+        await exit_stack.aclose()
 
     # Allow usage like:
     #
-    #   async with await PackWriter(**args) as p:
-    #       p.set_file(...)
-    #       p.set_preview(...)
+    #   async with await PackWriterAsync(**args) as p:
+    #       await p.set_file(...)
+    #       await p.set_preview(...)
     #
     # Which is equivalent to:
     #
-    #   p = PackWriter(**args)
-    #   context = p.open()
+    #   p = PackWriterAsync(**args)
+    #   await p.open()
     #   try:
-    #      p.set_file(...)
-    #      p.set_preview(...)
-    #      p.commit()
+    #      await p.set_file(...)
+    #      await p.set_preview(...)
+    #      await p.commit()
     #   finally:
-    #      p.close(context)
+    #      await p.close(context)
     #
     async def __aenter__(self) -> Self:
-        if self.__has_context:
-            msg = f"{self} is already open"
-            raise ValueError(msg)
-
-        self.__context = await self.open()
-        self.__has_context = True
+        await self.open()
         return self
 
     async def __aexit__(
@@ -148,26 +155,17 @@ class PackWriterAsync(Generic[_Context]):
         exc_inst: BaseException | None,
         exc_tb: TracebackType | None,
     ) -> None:
-        if not self.__has_context:
-            msg = f"{self} is not open"
-            raise ValueError(msg)
-
         try:
             if exc_type is None:
                 await self.commit()
         finally:
-            await self.close(
-                # The context type is allowed to be `None`, so we
-                # can't just assert that this is present.
-                self.__context,  # type: ignore
-            )
-            self.__has_context = False
+            await self.close()
 
 
 # For synchronous writes, just wrap an async writer.
-class PackWriter(Generic[_Context]):
-    def __init__(self, pack_writer_async: PackWriterAsync[_Context]) -> None:
-        self._pack_writer_async = pack_writer_async
+class PackWriter(Generic[_PackWriterAsyncType]):
+    def __init__(self, pack_writer_async: _PackWriterAsyncType) -> None:
+        self._pack_writer_async: _PackWriterAsyncType = pack_writer_async
 
     def set_file(self, path: str, file: str) -> None:
         asyncio.run(self._pack_writer_async.set_file(path, file))
@@ -187,11 +185,11 @@ class PackWriter(Generic[_Context]):
     def commit(self) -> None:
         asyncio.run(self._pack_writer_async.commit())
 
-    def open(self) -> _Context:
-        return asyncio.run(self._pack_writer_async.open())
+    def open(self) -> None:
+        asyncio.run(self._pack_writer_async.open())
 
-    def close(self, context: _Context) -> None:
-        asyncio.run(self._pack_writer_async.close(context))
+    def close(self) -> None:
+        asyncio.run(self._pack_writer_async.close())
 
     def __enter__(self) -> Self:
         asyncio.run(self._pack_writer_async.__aenter__())
@@ -206,7 +204,7 @@ class PackWriter(Generic[_Context]):
         asyncio.run(self._pack_writer_async.__aexit__(exc_type, exc_val, exc_tb))
 
 
-class DirectoryPackWriterAsync(PackWriterAsync[None]):
+class DirectoryPackWriterAsync(PackWriterAsync):
     def __init__(self, output_dir: str | os.PathLike, **k: Unpack[PackProperties]):
         super().__init__(**k)
 
@@ -242,11 +240,7 @@ class DirectoryPackWriterAsync(PackWriterAsync[None]):
         await self._write_to_path(self._preview_path(path), ogg_content)
 
     @override
-    async def open(self) -> None:
-        return None
-
-    @override
-    async def close(self, context: None) -> None:
+    async def _create_context(self, exit_stack: AsyncExitStack) -> None:
         pass
 
     @override
@@ -357,7 +351,7 @@ class DirectoryPackWriterAsync(PackWriterAsync[None]):
         await asyncio.to_thread(do_write_file, absolute_path, content)
 
 
-class DirectoryPackWriter(PackWriter):
+class DirectoryPackWriter(PackWriter[DirectoryPackWriterAsync]):
     def __init__(self, output_dir: str | os.PathLike, **k: Unpack[PackProperties]):
         pack_writer_async = DirectoryPackWriterAsync(output_dir, **k)
         super().__init__(pack_writer_async)

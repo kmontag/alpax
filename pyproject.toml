@@ -33,10 +33,10 @@ Source = "https://github.com/kmontag/alpax"
 [tool.hatch.version]
 path = "src/alpax/__about__.py"
 
-# [tool.hatch.envs.hatch-test]
-# extra-dependencies = [
-#   "pytest-asyncio~=0.23.7",
-# ]
+[tool.hatch.envs.hatch-test]
+extra-dependencies = [
+  "pytest-asyncio~=0.23.7",
+]
 
 [tool.hatch.envs.coverage]
 detached = true
@@ -49,6 +49,7 @@ combine = "coverage combine {args}"
 report-xml = "coverage xml"
 
 [tool.hatch.envs.types]
+template = "hatch-test"
 extra-dependencies = [
   "mypy>=1.0.0",
 ]
