@@ -1,6 +1,7 @@
-import asyncio
 import os
 import tempfile
+
+import pytest
 
 import alpax
 
@@ -51,15 +52,27 @@ def test_directory() -> None:
             assert "<rdf:li>Tag Name|Tag Value|Subtag Value</rdf:li>" in xmp_content
 
 
-def test_simple_directory_async() -> None:
+@pytest.mark.asyncio
+async def test_simple_directory_async() -> None:
     with tempfile.TemporaryDirectory() as output_dir:
+        async with alpax.DirectoryPackWriterAsync(output_dir, name="Test", unique_id="test.id") as pack_writer:
+            # Simple test, just make sure the write can happen
+            # without errors.
+            await pack_writer.set_file_content("path.adg", b"content")
 
-        async def run() -> None:
-            async with alpax.DirectoryPackWriterAsync(output_dir, name="Test", unique_id="test.id") as pack_writer:
-                # Simple test, just make sure the write can happen
-                # without errors.
-                await pack_writer.set_file_content("path.adg", b"content")
-
-        asyncio.run(run())
-        with open(os.path.join(output_dir, "path.adg")) as f:
+        with open(os.path.join(output_dir, "path.adg")) as f:  # noqa: ASYNC101
             assert f.read() == "content"
+
+
+@pytest.mark.asyncio
+async def test_exceptions_propagated() -> None:
+    with tempfile.TemporaryDirectory() as output_dir:
+        exception_msg = "test exception"
+
+        async def raise_exc() -> None:
+            async with alpax.DirectoryPackWriterAsync(output_dir, name="Test", unique_id="test.id") as pack_writer:
+                await pack_writer.set_file_content("path.adg", b"content")
+                raise RuntimeError(exception_msg)
+
+        with pytest.raises(RuntimeError, match=exception_msg):
+            await raise_exc()
