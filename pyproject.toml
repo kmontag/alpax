@@ -99,6 +99,9 @@ extend-select = ["ARG", "B", "E", "I", "W"]
 # line length in some cases.
 extend-ignore = ["E501"]
 
+[tool.ruff.lint.isort]
+known-first-party = ["alpax"]
+
 [tool.semantic_release]
 assets = []
 # Work around not being able to install packages preemptively in the
