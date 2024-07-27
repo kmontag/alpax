@@ -219,6 +219,10 @@ class DirectoryPackWriterAsync(PackWriterAsync):
         # Keys are paths within the pack.
         self._tags: dict[str, Collection[Tag]] = {}
 
+    @property
+    def output_dir(self) -> str | os.PathLike:
+        return self._output_dir
+
     @override
     async def set_file(self, path: str, file: str) -> None:
         await self._copy_to_path(path, file)
@@ -355,3 +359,7 @@ class DirectoryPackWriter(PackWriter[DirectoryPackWriterAsync]):
     def __init__(self, output_dir: str | os.PathLike, **k: Unpack[PackProperties]):
         pack_writer_async = DirectoryPackWriterAsync(output_dir, **k)
         super().__init__(pack_writer_async)
+
+    @property
+    def output_dir(self) -> str | os.PathLike:
+        return self._pack_writer_async.output_dir
