@@ -41,7 +41,7 @@ with DirectoryPackWriter(
 ) as p:
     p.set_file("Preset.adg", "/path/to/Preset.adg")
     p.set_preview("Preset.adg", "/path/to/Preset.adg.ogg")
-    p.set_tags("Preset", [
+    p.set_tags("Preset.adg", [
         ("Sounds", "Lead"),
         ("Custom", "Tag", "Subtag")
     ])
