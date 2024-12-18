@@ -1,5 +1,6 @@
 # Config file for semantic-prs (https://github.com/Ezard/semantic-prs).
 ---
-# PRs will be rebased before being merged. Individual commits need to
-# follow the semantic PR spec.
-commitsOnly: true
+enabled: true
+
+# Only check PR titles, as we'll generally squash them before mergins.
+titleOnly: true
