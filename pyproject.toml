@@ -34,6 +34,21 @@ Source = "https://github.com/kmontag/alpax"
 [tool.hatch.version]
 path = "src/alpax/__about__.py"
 
+[tool.hatch.envs.hatch-static-analysis]
+# For better consistency across hatch versions and interoperability with other tools, export a local
+# copy of hatch's internal ruff config. This file can be generated with:
+#
+#   hatch fmt --check --sync
+#
+# See https://hatch.pypa.io/dev/config/internal/static-analysis/#persistent-config.
+config-path = "ruff_defaults.toml"
+
+# Explicitly specify the ruff version constraint.
+#
+# This can be further upgraded once the changes from https://github.com/pypa/hatch/pull/1588 make it
+# into a hatch release.
+dependencies = ["ruff~=0.4.5"]
+
 [tool.hatch.envs.hatch-test]
 extra-dependencies = [
   "pytest-asyncio~=0.23.7",
@@ -80,16 +95,13 @@ exclude_lines = [
 disallow_untyped_defs = true
 
 [tool.ruff]
-# Explicitly declare default hatch settings, see
-# https://hatch.pypa.io/1.9/config/static-analysis/#default-settings.
-line-length = 120
-builtins = ["alpax"]
+# Use the local copy of the hatch defaults as a base.
+extend = "ruff_defaults.toml"
 
-[tool.ruff.format]
-# More explicit default hatch settings.
-docstring-code-format = true
-docstring-code-line-length = 80
+# Default is 120.
+line-length = 100
 
+# Additional strict linter rules.
 [tool.ruff.lint]
 # - ARG: unused arguments
 # - B: flake8-bugbear
