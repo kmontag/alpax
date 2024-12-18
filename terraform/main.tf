@@ -41,8 +41,34 @@ resource "github_repository" "default" {
   has_wiki      = false
 }
 
+data "github_rest_api" "rulesets" {
+  endpoint = "/repos/${var.github_owner}/${github_repository.default.name}/rulesets"
+
+  lifecycle {
+    postcondition {
+      condition     = self.code == 200
+      error_message = "Expected status code 200, but got ${self.code}"
+    }
+  }
+}
+
+locals {
+  # Array containing entries like:
+  #
+  #  {"id": 12345, "name": "some name", ...}.
+  #
+  rulesets = jsondecode(data.github_rest_api.rulesets.body)
+
+  # Get the existing main ruleset ID. This will be used to import the ruleset resource.
+  #
+  # If the ruleset ever gets deleted for some reason, this will be `null`, and the associated import
+  # block can simply be commented out temporarily.
+  main_ruleset_name = "main"
+  main_ruleset_id   = one([for ruleset in local.rulesets : ruleset.id if ruleset.name == local.main_ruleset_name])
+}
+
 resource "github_repository_ruleset" "main" {
-  name        = "main"
+  name        = local.main_ruleset_name
   repository  = github_repository.default.name
   target      = "branch"
   enforcement = "active"
@@ -101,42 +127,6 @@ resource "github_repository_ruleset" "main" {
   }
 }
 
-# Variables containing IDs needed for import of other resources. These aren't used in any actions;
-# we're just using them as a key-value store.
-#
-# These will be visible only to collaborators, though in principle nothing here is particularly
-# sensitive.
-locals {
-  ids = {
-    _MAIN_RULESET_ID = github_repository_ruleset.main.id
-  }
-
-  # To avoid cycles during planning, we need to be able to get the variable names without
-  # referencing any other resources. For now this just needs to be kept in sync with the actual keys
-  # of the `ids` variable.
-  ids_keys = toset(["_MAIN_RULESET_ID"])
-}
-
-resource "github_actions_variable" "ids" {
-  for_each = local.ids_keys
-
-  repository    = github_repository.default.name
-  variable_name = each.key
-
-  # Uncomment to set correct initial values when creating new entries. For existing variables, the
-  # correct value can be read directly from the resource. This means the value is available even
-  # during initial setup, when the related resource(s) for the ID haven't yet been imported or
-  # created.
-  #
-  # value = local.ids[each.key]
-  value = "PLACEHOLDER"
-
-  lifecycle {
-    # We never actually want to apply the placeholder value after importing these resources.
-    ignore_changes = [value]
-  }
-}
-
 # Import statements allowing the entire workspace to be imported from scratch. When creating new
 # resources during development, some of these may need to be temporarily commented out.
 import {
@@ -146,12 +136,5 @@ import {
 
 import {
   to = github_repository_ruleset.main
-  id = "${github_repository.default.name}:${github_actions_variable.ids["_MAIN_RULESET_ID"].value}"
-}
-
-import {
-  for_each = local.ids_keys
-
-  to = github_actions_variable.ids[each.key]
-  id = "${github_repository.default.name}:${each.key}"
+  id = "${github_repository.default.name}:${local.main_ruleset_id}"
 }
