@@ -1,4 +1,10 @@
 # Manages configuration for this repository.
+#
+# Note that some apps should also be manually installed for the repository (it's currently not
+# possible to manage these via terraform for non-organization owners):
+#
+# - https://github.com/apps/semantic-prs/
+# - https://github.com/apps/codecov/
 
 variable "github_owner" {
   default = "kmontag"
