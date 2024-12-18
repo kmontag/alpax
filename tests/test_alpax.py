@@ -40,7 +40,9 @@ def test_directory() -> None:
                 assert f"Int {field} = {value};" in properties_text
 
         xmp_files = [
-            file for file in os.listdir(os.path.join(output_dir, "Ableton Folder Info")) if file.endswith(".xmp")
+            file
+            for file in os.listdir(os.path.join(output_dir, "Ableton Folder Info"))
+            if file.endswith(".xmp")
         ]
         assert len(xmp_files) == 1
 
@@ -55,7 +57,9 @@ def test_directory() -> None:
 @pytest.mark.asyncio
 async def test_simple_directory_async() -> None:
     with tempfile.TemporaryDirectory() as output_dir:
-        async with alpax.DirectoryPackWriterAsync(output_dir, name="Test", unique_id="test.id") as pack_writer:
+        async with alpax.DirectoryPackWriterAsync(
+            output_dir, name="Test", unique_id="test.id"
+        ) as pack_writer:
             # Simple test, just make sure the write can happen
             # without errors.
             await pack_writer.set_file_content("path.adg", b"content")
@@ -70,7 +74,9 @@ async def test_exceptions_propagated() -> None:
         exception_msg = "test exception"
 
         async def raise_exc() -> None:
-            async with alpax.DirectoryPackWriterAsync(output_dir, name="Test", unique_id="test.id") as pack_writer:
+            async with alpax.DirectoryPackWriterAsync(
+                output_dir, name="Test", unique_id="test.id"
+            ) as pack_writer:
                 await pack_writer.set_file_content("path.adg", b"content")
                 raise RuntimeError(exception_msg)
 

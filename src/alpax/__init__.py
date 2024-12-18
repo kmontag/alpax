@@ -269,7 +269,9 @@ class DirectoryPackWriterAsync(PackWriterAsync):
             """
         ).lstrip()
 
-        await self._write_to_path(os.path.join(FOLDER_INFO_DIR, PROPERTIES_FILE), text.encode("utf-8"))
+        await self._write_to_path(
+            os.path.join(FOLDER_INFO_DIR, PROPERTIES_FILE), text.encode("utf-8")
+        )
 
     # Write pack metadata, e.g. tags.
     async def _write_xmp_file(self) -> None:
