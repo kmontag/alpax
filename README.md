@@ -7,18 +7,16 @@
 
 ---
 
-`alpax` allows you to generate custom Ableton Live packs. It supports
-adding audio previews and Live 12 tags to the pack content.
+`alpax` allows you to generate custom Ableton Live packs. It supports adding audio previews and Live
+12 tags to the pack content.
 
-Currently, only directory-based packs can be created - **generating
-`.alp` files is not supported.**
+Currently, only directory-based packs can be created - **generating `.alp` files is not supported.**
 
 Packs can be added to Live by dragging them into the Places pane.
 
-_This is alpha software. It works for my use cases but hasn't been
-extensively tested, and is missing plenty of functionality. APIs are
-subject to change. Please submit issues and/or PRs if
-you run into trouble._
+_This is alpha software. It works for my use cases but hasn't been extensively tested, and is
+missing plenty of functionality. APIs are subject to change. Please submit issues and/or PRs if you
+run into trouble._
 
 ## Installation
 

@@ -25,9 +25,8 @@ if TYPE_CHECKING:
         override,
     )
 else:
-    # Replace the override decorator with a no-op outside of the
-    # type-checking environment, so we don't need to depend on
-    # `typing_extensions` at runtime.
+    # Replace the override decorator with a no-op outside of the type-checking environment, so we
+    # don't need to depend on `typing_extensions` at runtime.
     def override(func):
         return func
 
@@ -35,15 +34,13 @@ else:
 FOLDER_INFO_DIR = "Ableton Folder Info"
 PROPERTIES_FILE = "Properties.cfg"
 
-# This appears to be Live's default filename for the first XMP
-# (metadata) file in a pack (or the User Library). Unclear exactly
-# where the name comes from. .alp files which include an XMP portion
-# (e.g. Granulator III) don't seem to include this actual name
-# anywhere.
+# This appears to be Live's default filename for the first XMP (metadata) file in a pack (or the
+# User Library). Unclear exactly where the name comes from. .alp files which include an XMP portion
+# (e.g. Granulator III) don't seem to include this actual name anywhere.
 XMP_FILE = "c55d131f-2661-5add-aece-29afb7099dfa.xmp"
 
-# First element is the tag name (e.g. "Character", "Devices"), second
-# element is the tag and subtag values.
+# First element is the tag name (e.g. "Character", "Devices"), second element is the tag and subtag
+# values.
 Tag: TypeAlias = tuple[str, Sequence[str]]
 
 _PackWriterAsyncType = TypeVar("_PackWriterAsyncType", bound="PackWriterAsync")
@@ -105,10 +102,9 @@ class PackWriterAsync:
     async def commit(self) -> None:
         raise NotImplementedError
 
-    # Open any resources necessary to start adding content, e.g. a
-    # temp directory to stage files. If any resources need to be
-    # cleaned up after all content has been added/committed, add them
-    # to the exit stack.
+    # Open any resources necessary to start adding content, e.g. a temp directory to stage files. If
+    # any resources need to be cleaned up after all content has been added/committed, add them to
+    # the exit stack.
     async def _create_context(self, exit_stack: AsyncExitStack) -> None:
         raise NotImplementedError
 

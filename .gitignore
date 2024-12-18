@@ -6,4 +6,9 @@ __pycache__/
 /.coverage*
 /coverage.xml
 
+# Terraform local data and transient state.
+/terraform/.terraform
+/terraform/terraform.tfstate
+/terraform/terraform.tfstate.backup
+
 /dist/
