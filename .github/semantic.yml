@@ -2,5 +2,5 @@
 ---
 enabled: true
 
-# Only check PR titles, as we'll generally squash them before mergins.
+# Only check PR titles, as we'll generally squash them before merging.
 titleOnly: true
